@@ -4,9 +4,9 @@ import tensorflow as tf
 def dot(u, v, geometry="spherical"):
     '''
         Calculate dot_product for two n-D vectors, u and v
-        Inputs: u, v: two vectors, represented as rank-1 tf.Tensors
+        Inputs: u, v: two vectors, represented as rank-2 tf.Tensors
                 (Inputs could be squeezed, but better to make user do this.)
-        Outputs: dot_product, a 1-D real number (np.float32)
+        Outputs: dot_product, a rank-1 Tensor of real numbers (np.float32)
     '''
 #    if u.shape.ndims != 1 or v.shape.ndims != 1:
 #        raise TypeError(
@@ -59,7 +59,7 @@ def distance(u, v, geometry="hyperboloid"):
     if geometry == "spherical":
         return tf.acos(dotprod)
     elif geometry == "hyperboloid":
-        return tf.acosh(-dotprod)
+        return tf.acosh(tf.maximum(-dotprod, 1.))
     elif geometry == "euclidean":
         return tf.sqrt(dot(u-v, u-v, geometry))
     else:
