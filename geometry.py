@@ -127,7 +127,7 @@ def exponential_map(point_on_manifold, v_TpS, geometry="spherical"):
                         tf.cos(norm_v_TpS)*point_on_manifold 
                             + (tf.sin(norm_v_TpS)/norm_v_TpS)*v_TpS,
                         point_on_manifold
-        return tf.greater(norm_v_TpS, 0.)
+        )
     elif geometry == "hyperboloid":
         return tf.where(
                         tf.greater(grouted_norm_v_TpS, 0.),
