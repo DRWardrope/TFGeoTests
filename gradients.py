@@ -15,7 +15,14 @@ def distance_gradient(estimate, target):
     #metric = get_metric(tf.shape(target)[0], "hyperboloid")
     metric = get_metric(target.shape[0], "hyperboloid")
     grad_dist = tf.einsum("ij,ik->jk", metric, target)
-    return grad_dist/tf.sqrt(tf.square(dot(target, estimate, "hyperboloid")) - 1.)
+    grad_dist /= tf.diag_part(tf.sqrt(tf.square(dot(target, estimate, "hyperboloid")) - 1.))
+    grad_dist = tf.where(
+                            tf.is_finite(grad_dist),
+                            grad_dist,
+                            tf.zeros_like(grad_dist)
+                    )
+
+    return grad_dist
 
 def update_step(estimate, target, gradient_estimator, learning_rate):
     eucl_grad = gradient_estimator(estimate, target)
