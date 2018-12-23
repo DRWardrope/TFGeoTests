@@ -110,21 +110,22 @@ def testHardcodedGradientDescent():
     
     assert(np.all(np.less(latest_dist, init_dist)))
 
-#def testAutogradGradientDescent():
-#    target = tf.placeholder(tf.float32, shape=(2,1), name="target")
-#    estimate = tf.Variable(np.array([[1.02651673], [1.43308639]], dtype=np.float32))
-#    dist = distance(target, estimate, geometry="hyperboloid")
-#    hard_coded = tf.assign(estimate, update_step(estimate, target, distance_gradient, 0.1))
+def testAutogradGradientDescent():
+    target = tf.placeholder(tf.float32, shape=(2,1), name="target")
+    estimate = tf.Variable(np.array([[1.02651673], [1.43308639]], dtype=np.float32))
+    dist = distance(target, estimate, geometry="hyperboloid")
+    automatic_grad = tf.gradients(tf.diag_part(dist), [estimate])[0]
+    update = tf.assign(estimate, update_step(estimate, target, automatic_grad, 0.1))
 #
-#    init = tf.global_variables_initializer()
+    init = tf.global_variables_initializer()
 #
-#    targets = np.array([[0.], [1.]])
+    targets = np.array([[0.], [1.]])
 #
-#    sess = tf.Session()
-#    sess.run(init)
+    sess = tf.Session()
+    sess.run(init)
 #
-#    init_dist = sess.run(dist, feed_dict={target:targets})
-#    for epoch in range(0, 12):
-#        latest_est, latest_dist = sess.run([optimisation, dist], feed_dict={target:targets})
-#        #print("Epoch {}: distance = {:.3g}".format(epoch, latest_dist))
-#        print("Epoch =", epoch, "distance =", latest_dist)
+    init_dist = sess.run(dist, feed_dict={target:targets})
+    for epoch in range(0, 12):
+        latest_est, latest_dist = sess.run([optimisation, dist], feed_dict={target:targets})
+        #print("Epoch {}: distance = {:.3g}".format(epoch, latest_dist))
+        print("Epoch =", epoch, "distance =", latest_dist)

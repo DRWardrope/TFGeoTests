@@ -24,7 +24,7 @@ def distance_gradient(estimate, target):
 
     return grad_dist
 
-def update_step(estimate, target, gradient_estimator, learning_rate):
+def update_step(estimate, target, gradient_estimate, learning_rate):
     eucl_grad = gradient_estimator(estimate, target)
     grad_in_TpS = project_to_tangent(estimate, eucl_grad, geometry="hyperboloid") 
     #The 0.1 factor represents the learning rate
